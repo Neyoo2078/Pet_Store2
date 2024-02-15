@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { CartItemFromLS } from '../lib/Redux/Reducers/ProductReducer';
 import {
   PaymentElement,
   useStripe,
@@ -11,8 +13,8 @@ export default function CheckoutForm({ clientSecret }) {
 
   const [message, setMessage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  console.log({ clientSecret });
-  console.log({ message });
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!stripe) {
@@ -60,6 +62,7 @@ export default function CheckoutForm({ clientSecret }) {
       },
     });
 
+    dispatch(CartItemFromLS(null));
     // This point will only be reached if there is an immediate error when
     // confirming the payment. Otherwise, your customer will be redirected to
     // your `return_url`. For some payment methods like iDEAL, your customer will
