@@ -19,6 +19,7 @@ const InvoicesPage = () => {
 
   const [clientSecret, setClientSecret] = useState('');
   const [Amount, setAmount] = useState('');
+  console.log(process.env.REACT_APP_BASE_URL);
 
   useEffect(() => {
     // Create PaymentIntent as soon as the page loads
