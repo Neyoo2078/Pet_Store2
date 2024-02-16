@@ -13,6 +13,8 @@ import { useEffect } from 'react';
 import { SetActiveUser } from '../lib/Redux/Reducers/ProductReducer';
 import { useDispatch } from 'react-redux';
 import { useRef } from 'react';
+import { VscThreeBars } from 'react-icons/vsc';
+import { IoMdClose } from 'react-icons/io';
 import {
   CartItemFromLS,
   AddLSDbCart,
@@ -35,7 +37,6 @@ const NavBar = () => {
   const container = useRef();
   const nav = useRef();
 
-  console.log(container?.current?.clientHeight);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -130,7 +131,7 @@ const NavBar = () => {
   return (
     <div
       ref={container}
-      className="w-full min-h-[60px] flex flex-col gap-2 relative py-4  sm:p-[10px] border-[1px]"
+      className="w-full min-h-[60px] flex flex-col  gap-2 relative py-4   border-[1px]"
     >
       <div className="w-[90%] m-auto h-full flex  justify-between">
         <div className="flex gap-4 items-center justify-center">
@@ -177,13 +178,22 @@ const NavBar = () => {
             <Link to="/sign-in">Sign In</Link>
           </SignedOut>
         </div>
-        <div
-          onClick={() => {
-            setopenNav(!openNav);
-          }}
-          className="sm:hidden flex"
-        >
-          Close
+        <div className="sm:hidden flex">
+          {openNav ? (
+            <IoMdClose
+              onClick={() => {
+                setopenNav(false);
+              }}
+              className="w-[35px] h-[35px] text-[#7a7979]"
+            />
+          ) : (
+            <VscThreeBars
+              onClick={() => {
+                setopenNav(true);
+              }}
+              className="w-[35px] h-[35px] text-[#7a7979]"
+            />
+          )}
         </div>
       </div>
       <div className="flex sm:hidden sm:p-0 p-2 gap-2 justify-between items-center">
@@ -226,7 +236,9 @@ const NavBar = () => {
               key={i}
               onClick={() => {
                 setActiveLink(items.name);
-                navigate(`${items.path}`);
+                if (items.path) {
+                  navigate(`${items.path}`);
+                }
               }}
               className={`${
                 items.name === ActiveLink && 'text-white bg-[#f04336]'
@@ -239,21 +251,28 @@ const NavBar = () => {
       </div>
       {openNav && container?.current && (
         <div
-          className={`w-full h-[${nav.current?.clientHeight}px] bg-[#fff] border-t-[#f86060]  border-[2px] absolute z-50  top-[${container?.current?.clientHeight}px] `}
+          style={{
+            position: 'absolute',
+            top: container?.current?.clientHeight,
+            height: nav.current?.clientHeight,
+          }}
+          className={`w-full  bg-[#fff] border-t-[#f86060] md:hidden flex  border-[2px] absolute z-50   `}
         >
           <ul className="flex flex-col gap-2" ref={nav}>
             {NavLink.map((items, i) => (
               <li
                 key={i}
                 onClick={() => {
-                  setActiveLink(items);
-                  navigate('/');
+                  setActiveLink(items.name);
+                  if (items.path) {
+                    navigate(`${items.path}`);
+                  }
                 }}
                 className={`${
-                  items === ActiveLink ? 'text-[#f04336]' : 'text-black'
-                }  text-[16px] rounded-[3px]  py-[4px] px-[14px] transition-all`}
+                  items.name === ActiveLink ? 'text-[#f04336]' : 'text-black'
+                }  text-[16px] rounded-[3px]  py-[4px] px-[14px] hover:text-[#f04336] transition-all`}
               >
-                {items}
+                {items.name}
               </li>
             ))}
           </ul>
